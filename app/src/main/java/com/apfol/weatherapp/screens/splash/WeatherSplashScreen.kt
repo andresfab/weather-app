@@ -28,24 +28,30 @@ import com.apfol.weatherapp.R
 import com.apfol.weatherapp.navigation.WeatherScreens
 import kotlinx.coroutines.delay
 
+private const val SPLASH_DELAY_TIME = 2000L
+
 @Composable
 fun WeatherSplashScreen(navController: NavController) {
     val scale = remember {
         Animatable(0f)
     }
 
-    LaunchedEffect(key1 = true, block = {
-        scale.animateTo(targetValue = 0.9f,
-            animationSpec = tween(
-                durationMillis = 800,
-                easing = {
-                    OvershootInterpolator(8f)
-                        .getInterpolation(it)
-                })
-        )
-        delay(2000L)
-        navController.navigate(WeatherScreens.WeatherSearchScreen.name)
-    } )
+    LaunchedEffect(
+        key1 = true,
+        block = {
+            scale.animateTo(
+                targetValue = 0.9f,
+                animationSpec = tween(
+                    durationMillis = 800,
+                    easing = {
+                        OvershootInterpolator(8f).getInterpolation(it)
+                    }
+                )
+            )
+            delay(SPLASH_DELAY_TIME)
+            navController.navigate(WeatherScreens.WeatherSearchScreen.name)
+        }
+    )
 
     Surface(
         modifier = Modifier
@@ -58,16 +64,22 @@ fun WeatherSplashScreen(navController: NavController) {
             width = 2.dp, color = Color.LightGray
         )
     ) {
-        Column(modifier = Modifier.padding(1.dp),
+        Column(
+            modifier = Modifier.padding(1.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
-            Image(painter = painterResource(id = R.drawable.sun),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.sun),
                 contentDescription = "sunny icon",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(95.dp))
-            Text(text = "Find the Sun?",
+                modifier = Modifier.size(95.dp)
+            )
+            Text(
+                text = "Find the Sun?",
                 style = MaterialTheme.typography.h5,
-                color = Color.LightGray)
+                color = Color.LightGray
+            )
         }
     }
 }
