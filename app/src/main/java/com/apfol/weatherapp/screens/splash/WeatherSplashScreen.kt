@@ -32,26 +32,22 @@ private const val SPLASH_DELAY_TIME = 2000L
 
 @Composable
 fun WeatherSplashScreen(navController: NavController) {
-    val scale = remember {
-        Animatable(0f)
-    }
+    val scale = remember { Animatable(0f) }
 
-    LaunchedEffect(
-        key1 = true,
-        block = {
-            scale.animateTo(
-                targetValue = 0.9f,
-                animationSpec = tween(
-                    durationMillis = 800,
-                    easing = {
-                        OvershootInterpolator(8f).getInterpolation(it)
-                    }
-                )
+    LaunchedEffect(key1 = true) {
+        scale.animateTo(
+            targetValue = 0.9f,
+            animationSpec = tween(
+                durationMillis = 800,
+                easing = {
+                    OvershootInterpolator(8f).getInterpolation(it)
+                }
             )
-            delay(SPLASH_DELAY_TIME)
-            navController.navigate(WeatherScreens.WeatherSearchScreen.name)
-        }
-    )
+        )
+        delay(SPLASH_DELAY_TIME)
+        navController.popBackStack()
+        navController.navigate(WeatherScreens.WeatherSearchScreen.name)
+    }
 
     Surface(
         modifier = Modifier
