@@ -32,6 +32,7 @@ import com.apfol.weatherapp.ui.theme.Purple500
 import kotlinx.coroutines.delay
 
 private const val SPLASH_DELAY_TIME = 2000L
+private const val MAX_SCALE = 0.9F
 
 @Composable
 fun WeatherSplashScreen(navController: NavController) {
@@ -39,7 +40,7 @@ fun WeatherSplashScreen(navController: NavController) {
 
     LaunchedEffect(key1 = true) {
         scale.animateTo(
-            targetValue = 0.9f,
+            targetValue = MAX_SCALE,
             animationSpec = tween(
                 durationMillis = 800,
                 easing = {
@@ -56,7 +57,7 @@ fun WeatherSplashScreen(navController: NavController) {
 
 @Preview
 @Composable
-fun Splash(scale: Float = 0.9F) {
+fun Splash(scale: Float = MAX_SCALE) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = Purple500
