@@ -19,7 +19,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun WeatherSearchScreen() {
-    Header()
+    Column {
+        Header()
+        ResultList()
+    }
 }
 
 @Preview
@@ -33,15 +36,16 @@ fun Header() {
                 vertical = 20.dp
             )
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(40.dp))
         Text(
-            text = "Search",
+            text = "Weather search",
             style = MaterialTheme.typography.h6,
             textAlign = TextAlign.Start
         )
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            value = "Search a City / Region / Province",
+            value = "",
+            placeholder = { Text("Search a City / Region / Province") },
             onValueChange = {}
         )
     }
