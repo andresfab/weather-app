@@ -18,7 +18,7 @@ fun WeatherNavigation() {
             WeatherSplashScreen(navController = navController)
         }
         composable(WeatherScreens.WeatherSearchScreen.name) {
-            WeatherSearchScreen("world")
+            WeatherSearchScreen()
         }
     }
 }
