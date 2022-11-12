@@ -1,55 +1,115 @@
 package com.apfol.weatherapp.screens.search
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.apfol.weatherapp.domain.model.WeatherSearchResult
 
 @Composable
-fun WeatherSearchScreen() {
-    Header()
+fun WeatherSearchScreen(
+    navController: NavController,
+    viewModel: WeatherSearchViewModel = hiltViewModel()
+) {
+    Column {
+        Header(viewModel.searchQuery.value) { newQuery ->
+            viewModel.search(newQuery)
+        }
+        ResultsView(viewModel.state.value)
+    }
 }
 
 @Preview
 @Composable
-fun Header() {
+fun Header(
+    query: String = "",
+    onValChange: (String) -> Unit = {}
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 20.dp,
-                vertical = 20.dp
+                start = 20.dp,
+                top = 32.dp,
+                end = 20.dp
             )
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
         Text(
-            text = "Search",
-            style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Start
+            text = "Weather search",
+            style = MaterialTheme.typography.h6
         )
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
-            value = "Search a City / Region / Province",
-            onValueChange = {}
+            value = query,
+            placeholder = { Text("Search a City / Region / Province") },
+            onValueChange = { onValChange(it) }
         )
     }
 }
 
 @Preview
 @Composable
-fun ResultList() {
+fun ResultsView(
+    state: WeatherSearchState = WeatherSearchState()
+) {
+    ResultsList(state)
+    if (state.results.isEmpty()) {
+        Text(
+            text = "Find the weather somewhere",
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        )
+    }
+    if (state.error.isNotBlank()) {
+        Text(
+            text = state.error,
+            color = MaterialTheme.colors.error,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+        )
+    }
+    if (state.isLoading) {
+        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+            CircularProgressIndicator(
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ResultsList(
+    state: WeatherSearchState = WeatherSearchState(
+        results = listOf(
+            WeatherSearchResult("Chía", "Cundinamarca"),
+            WeatherSearchResult("Soacha", "Cundinamarca")
+        )
+    )
+) {
     LazyColumn(
         modifier = Modifier.padding(
             horizontal = 20.dp,
@@ -57,18 +117,21 @@ fun ResultList() {
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        item {
-            WeatherResultItem()
-        }
-        item {
-            WeatherResultItem()
+        items(state.results) { result ->
+            WeatherResultItem(
+                result.name,
+                result.country
+            )
         }
     }
 }
 
 @Preview
 @Composable
-fun WeatherResultItem() {
+fun WeatherResultItem(
+    name: String = "Chía",
+    country: String = "Cundinamarca"
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -77,8 +140,8 @@ fun WeatherResultItem() {
             modifier = Modifier
                 .padding(8.dp)
         ) {
-            Text(text = "Chía")
-            Text(text = "Cundinamarca")
+            Text(text = name)
+            Text(text = country)
         }
     }
 }

@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.apfol.weatherapp.R
 import com.apfol.weatherapp.navigation.WeatherScreens
-import com.apfol.weatherapp.ui.theme.Purple500
 import kotlinx.coroutines.delay
 
 private const val SPLASH_DELAY_TIME = 2000L
@@ -60,7 +59,7 @@ fun WeatherSplashScreen(navController: NavController) {
 fun Splash(scale: Float = MAX_SCALE) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = Purple500
+        color = MaterialTheme.colors.background
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
