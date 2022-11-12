@@ -20,7 +20,7 @@ data class WeatherSearchResultDTO(
     var url: String
 )
 
-fun WeatherSearchResultDTO.toWeatherSearchResultModel() = WeatherSearchResult(
+fun WeatherSearchResultDTO.toWeatherSearchResult() = WeatherSearchResult(
     name,
     country
 )
