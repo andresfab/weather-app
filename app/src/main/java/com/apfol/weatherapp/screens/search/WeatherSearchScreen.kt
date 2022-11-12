@@ -40,8 +40,7 @@ fun Header() {
     ) {
         Text(
             text = "Weather search",
-            style = MaterialTheme.typography.h6,
-            textAlign = TextAlign.Start
+            style = MaterialTheme.typography.h6
         )
         Spacer(modifier = Modifier.height(20.dp))
         TextField(
