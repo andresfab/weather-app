@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@Preview
 @Composable
 fun WeatherSearchScreen() {
     Column {
@@ -32,11 +33,11 @@ fun Header() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                horizontal = 20.dp,
-                vertical = 20.dp
+                start = 20.dp,
+                top = 32.dp,
+                end = 20.dp
             )
     ) {
-        Spacer(modifier = Modifier.height(40.dp))
         Text(
             text = "Weather search",
             style = MaterialTheme.typography.h6,
@@ -61,6 +62,9 @@ fun ResultList() {
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        item {
+            WeatherResultItem()
+        }
         item {
             WeatherResultItem()
         }
