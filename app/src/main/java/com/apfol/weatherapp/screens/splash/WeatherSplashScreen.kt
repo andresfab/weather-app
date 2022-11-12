@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -22,10 +23,12 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.apfol.weatherapp.R
 import com.apfol.weatherapp.navigation.WeatherScreens
+import com.apfol.weatherapp.ui.theme.Purple500
 import kotlinx.coroutines.delay
 
 private const val SPLASH_DELAY_TIME = 2000L
@@ -48,34 +51,49 @@ fun WeatherSplashScreen(navController: NavController) {
         navController.popBackStack()
         navController.navigate(WeatherScreens.WeatherSearchScreen.name)
     }
+    Splash(scale.value)
+}
 
+@Preview
+@Composable
+fun Splash(scale: Float = 0.9F) {
     Surface(
-        modifier = Modifier
-            .padding(15.dp)
-            .size(330.dp)
-            .scale(scale.value),
-        shape = CircleShape,
-        color = Color.White,
-        border = BorderStroke(
-            width = 2.dp, color = Color.LightGray
-        )
+        modifier = Modifier.fillMaxSize(),
+        color = Purple500
     ) {
         Column(
-            modifier = Modifier.padding(1.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.sun),
-                contentDescription = "sunny icon",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.size(95.dp)
-            )
-            Text(
-                text = "Find the Sun?",
-                style = MaterialTheme.typography.h5,
-                color = Color.LightGray
-            )
+            Surface(
+                modifier = Modifier
+                    .padding(15.dp)
+                    .size(330.dp)
+                    .scale(scale),
+                shape = CircleShape,
+                color = Color.White,
+                border = BorderStroke(
+                    width = 2.dp, color = Color.LightGray
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(1.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.sun),
+                        contentDescription = "sunny icon",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(95.dp)
+                    )
+                    Text(
+                        text = "Find the Sun?",
+                        style = MaterialTheme.typography.h5,
+                        color = Color.LightGray
+                    )
+                }
+            }
         }
     }
 }
