@@ -1,5 +1,6 @@
 package com.apfol.weatherapp.screens.search
 
+import android.widget.Space
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,15 +14,21 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apfol.weatherapp.domain.model.WeatherSearchResult
@@ -32,11 +39,15 @@ fun WeatherSearchScreen(
     navController: NavController,
     viewModel: WeatherSearchViewModel = hiltViewModel()
 ) {
-    Column {
-        Header(viewModel.searchQuery.value) { newQuery ->
-            viewModel.search(newQuery)
+    Scaffold(
+        topBar = { TopAppBar(title = { Text("Weather search") }) }
+    ) {
+        Column {
+            Header(viewModel.searchQuery.value) { newQuery ->
+                viewModel.search(newQuery)
+            }
+            ResultsView(viewModel.state.value, navController)
         }
-        ResultsView(viewModel.state.value, navController)
     }
 }
 
@@ -46,20 +57,16 @@ fun Header(
     query: String = "",
     onValChange: (String) -> Unit = {}
 ) {
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
                 start = 20.dp,
                 top = 32.dp,
                 end = 20.dp
-            )
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        Text(
-            text = "Weather search",
-            style = MaterialTheme.typography.h6
-        )
-        Spacer(modifier = Modifier.height(20.dp))
         TextField(
             value = query,
             placeholder = { Text("Search a City / Region / Province") },
@@ -95,7 +102,11 @@ fun ResultsView(
         )
     }
     if (state.isLoading) {
-        Box(modifier = Modifier.fillMaxWidth().fillMaxHeight()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+        ) {
             CircularProgressIndicator(
                 modifier = Modifier.align(Alignment.Center)
             )
@@ -116,8 +127,7 @@ private fun ResultsList(
 ) {
     LazyColumn(
         modifier = Modifier.padding(
-            horizontal = 20.dp,
-            vertical = 32.dp
+            top = 32.dp
         ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -138,7 +148,7 @@ fun WeatherResultItem(
     country: String = "Cundinamarca",
     navController: NavController? = null
 ) {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
@@ -146,11 +156,21 @@ fun WeatherResultItem(
             }
     ) {
         Column(
-            modifier = Modifier
-                .padding(8.dp)
+            modifier = Modifier.padding(
+                start = 20.dp,
+                end = 20.dp,
+                bottom = 4.dp
+            )
         ) {
             Text(text = name)
-            Text(text = country)
+            Spacer(Modifier.height(4.dp))
+            Text(
+                text = country,
+                style = MaterialTheme.typography.caption.copy(
+                    fontWeight = FontWeight.Light
+                )
+            )
         }
+        Divider()
     }
 }
