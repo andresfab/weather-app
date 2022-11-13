@@ -21,6 +21,6 @@ fun WeatherDetailsDTO.toWeatherDetails(): WeatherDetails {
             current.humidity,
             current.tempC
         ),
-        forecast.forecastday.map { it.toSpecificWeather() }
+        forecast.forecastday.map { it.toCurrentWeather() }
     )
 }
