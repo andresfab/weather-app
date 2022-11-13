@@ -59,7 +59,7 @@ fun WeatherSplashScreen(navController: NavController) {
 fun Splash(scale: Float = MAX_SCALE) {
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
+        color = MaterialTheme.colors.primary
     ) {
         Column(
             verticalArrangement = Arrangement.Center,

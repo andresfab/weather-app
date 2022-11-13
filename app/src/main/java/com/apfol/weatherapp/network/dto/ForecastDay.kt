@@ -11,7 +11,7 @@ data class Forecastday(
     @SerializedName("hour") var hour: ArrayList<Hour> = arrayListOf()
 )
 
-fun Forecastday.toSpecificWeather(): CurrentWeather {
+fun Forecastday.toCurrentWeather(): CurrentWeather {
     return CurrentWeather(
         day.condition.text,
         day.condition.icon,
