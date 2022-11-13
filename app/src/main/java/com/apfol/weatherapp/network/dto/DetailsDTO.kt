@@ -6,5 +6,5 @@ import com.google.gson.annotations.SerializedName
 data class DetailsDTO(
     @SerializedName("location") var locationDTO: LocationDTO,
     @SerializedName("current") var current: Current,
-    @SerializedName("forecast") var forecast: Forecast
+    @SerializedName("forecast") var forecastDTO: ForecastDTO
 )

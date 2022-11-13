@@ -1,5 +1,6 @@
 package com.apfol.weatherapp.screens.details
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -25,8 +28,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,9 +43,14 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.apfol.weatherapp.R
 import com.apfol.weatherapp.domain.model.WeatherDetails
+import com.apfol.weatherapp.screens.details.composables.ChartContainer
 import com.apfol.weatherapp.utils.WeatherDetailsParameterProvider
 import com.apfol.weatherapp.utils.getNextDaysWeathers
+import com.apfol.weatherapp.utils.LINE_CHART_DATA
+import com.apfol.weatherapp.utils.toLineChartData
 import com.apfol.weatherapp.utils.weekDayStringFromDateString
+import hu.ma.charts.line.LineChart
+import hu.ma.charts.line.data.LineChartData
 
 @Composable
 fun WeatherDetailsScreen(
@@ -56,7 +66,7 @@ fun WeatherDetailsScreen(
                 )
             }
         })
-    }) {
+    }) { padding ->
         val weatherDetailState = viewModel.weatherDetailState.value
         if (weatherDetailState.isLoading) {
             Box(
@@ -69,9 +79,16 @@ fun WeatherDetailsScreen(
             }
         }
         weatherDetailState.weatherDetails?.let {
-            Column {
-                ActualWeatherView(it)
-                NextWeatherForecastView(it)
+            LazyColumn(
+                Modifier.padding(padding)
+            ) {
+                item { ActualWeatherView(it) }
+                item {
+                    HoursTemperatureChart(
+                        it.weathers.first().hours.toLineChartData()
+                    )
+                }
+                item { NextWeatherForecastView(it) }
             }
         }
         if (weatherDetailState.error.isNotBlank()) {
@@ -96,7 +113,7 @@ fun ActualWeatherView(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = 24.dp, start = 20.dp, end = 20.dp
+                start = 20.dp, end = 20.dp
             ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -124,14 +141,48 @@ fun ActualWeatherView(
             Spacer(Modifier.width(16.dp))
             Text(
                 weatherDetails.weathers.first().weatherState,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.body1.copy(
+                    fontWeight = FontWeight.ExtraBold
+                ),
                 textAlign = TextAlign.End
             )
         }
     }
 }
 
-
+@Preview
+@Composable
+fun HoursTemperatureChart(
+    data: LineChartData = LINE_CHART_DATA
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                start = 20.dp,
+                end = 20.dp,
+                top = 20.dp
+            ),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(
+            modifier = Modifier.height(200.dp)
+        ) {
+            LineChart(
+                data = data
+            )
+        }
+        Text(
+            modifier = Modifier.padding(top = 4.dp),
+            text = "Hours",
+            style = TextStyle(
+                fontSize = 8.sp,
+                color = Color.Gray,
+                fontWeight = FontWeight.ExtraBold
+            )
+        )
+    }
+}
 
 @Preview
 @Composable
@@ -146,7 +197,7 @@ fun NextWeatherForecastView(
     ) {
         Box(
             modifier = Modifier.padding(
-                start = 20.dp, top = 36.dp
+                start = 20.dp, top = 20.dp
             )
         ) {
             Text(
@@ -154,11 +205,11 @@ fun NextWeatherForecastView(
                 style = MaterialTheme.typography.h6
             )
         }
-        LazyColumn(
-            modifier = Modifier.padding(top = 32.dp),
+        Column(
+            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            items(nextWeathers) { nextWeather ->
+            nextWeathers.forEach { nextWeather ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

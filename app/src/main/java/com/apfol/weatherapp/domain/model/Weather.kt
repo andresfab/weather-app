@@ -5,5 +5,6 @@ data class Weather (
     val weatherStateImageURL: String,
     val humidity: Int,
     val temperature: Float,
-    val date: String
+    val date: String,
+    val hours: List<Hour>
 )

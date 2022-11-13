@@ -2,7 +2,6 @@ package com.apfol.weatherapp.network
 
 import com.apfol.weatherapp.network.dto.WeatherDetailsDTO
 import com.apfol.weatherapp.network.dto.WeatherSearchResultDTO
-import com.apfol.weatherapp.network.dto.Forecast
 import com.apfol.weatherapp.utils.Constants.API_KEY
 import com.apfol.weatherapp.utils.Constants.WEATHER_DAYS
 import retrofit2.http.GET

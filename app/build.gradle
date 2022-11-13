@@ -14,7 +14,7 @@ android {
         minSdk 21
         targetSdk 32
         versionCode 1
-        versionName "0.1.0"
+        versionName "0.6.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -70,6 +70,8 @@ dependencies {
 
     // Necessary to use LocalDate with SDK < 26
     implementation 'com.jakewharton.threetenabp:threetenabp:1.4.3'
+
+    implementation 'ma.hu:compose-charts:0.3.5'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
