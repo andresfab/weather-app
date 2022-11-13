@@ -1,6 +1,9 @@
 package com.apfol.weatherapp.domain.model
 
-data class Weather(
-    val name: String,
-    val country: String
+data class Weather (
+    val weatherState: String,
+    val weatherStateImageURL: String,
+    val humidity: Int,
+    val temperature: Float,
+    val date: String
 )

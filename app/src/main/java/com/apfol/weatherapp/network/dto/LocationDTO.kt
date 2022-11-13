@@ -2,7 +2,7 @@ package com.avility.weatherboldapp.data.remote.dto
 
 import com.google.gson.annotations.SerializedName
 
-data class Location(
+data class LocationDTO(
     @SerializedName("name") var name: String,
     @SerializedName("region") var region: String,
     @SerializedName("country") var country: String,

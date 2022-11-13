@@ -22,7 +22,7 @@ fun WeatherNavigation() {
             WeatherSearchScreen(navController = navController)
         }
         composable(WeatherScreens.WeatherDetailsScreen.name + "/{weatherName}") {
-            WeatherDetailsScreen()
+            WeatherDetailsScreen(navController = navController)
         }
     }
 }
