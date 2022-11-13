@@ -13,11 +13,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +41,7 @@ fun WeatherSearchScreen(
     Scaffold(
         topBar = { TopAppBar(title = { Text("Weather search") }) }
     ) {
-        Column {
+        Column(Modifier.padding(it)) {
             Header(viewModel.searchQuery.value) { newQuery ->
                 viewModel.search(newQuery)
             }
@@ -64,6 +67,7 @@ fun Header(
         contentAlignment = Alignment.Center
     ) {
         TextField(
+            leadingIcon = { Icon(imageVector = Icons.Default.Search, contentDescription = "Search icon") },
             value = query,
             placeholder = { Text("Search a City / Region / Province") },
             onValueChange = { onValChange(it) }
