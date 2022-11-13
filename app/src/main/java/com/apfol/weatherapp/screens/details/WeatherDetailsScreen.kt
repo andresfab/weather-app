@@ -6,62 +6,84 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.apfol.weatherapp.R
-import com.apfol.weatherapp.domain.model.CurrentWeather
-import com.apfol.weatherapp.domain.model.Weather
 import com.apfol.weatherapp.domain.model.WeatherDetails
 import com.apfol.weatherapp.utils.WeatherDetailsParameterProvider
+import com.apfol.weatherapp.utils.getNextDaysWeathers
+import com.apfol.weatherapp.utils.weekDayStringFromDateString
 
 @Composable
 fun WeatherDetailsScreen(
-    viewModel: WeatherDetailsViewModel = hiltViewModel()
+    navController: NavController, viewModel: WeatherDetailsViewModel = hiltViewModel()
 ) {
-    val weatherDetailState = viewModel.weatherDetailState.value
-
-    if (weatherDetailState.isLoading) {
-        Box(
-            modifier = Modifier.fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Text("Weather details")
+        }, navigationIcon = {
+            IconButton(onClick = { navController.navigateUp() }) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBack, contentDescription = "Back arrow"
+                )
+            }
+        })
+    }) {
+        val weatherDetailState = viewModel.weatherDetailState.value
+        if (weatherDetailState.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    }
-    weatherDetailState.weatherDetails?.let {
-        Column {
-            ActualWeatherView(it)
-            NextWeatherView(it)
+        weatherDetailState.weatherDetails?.let {
+            Column {
+                ActualWeatherView(it)
+                NextWeatherForecastView(it)
+            }
         }
-    }
-    if (weatherDetailState.error.isNotBlank()) {
-        Text(
-            text = weatherDetailState.error,
-            color = MaterialTheme.colors.error,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-        )
+        if (weatherDetailState.error.isNotBlank()) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                text = weatherDetailState.error,
+                color = MaterialTheme.colors.error,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
@@ -70,101 +92,114 @@ fun WeatherDetailsScreen(
 fun ActualWeatherView(
     @PreviewParameter(WeatherDetailsParameterProvider::class) weatherDetails: WeatherDetails
 ) {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(
-                top = 24.dp,
-                start = 20.dp,
-                end = 20.dp
-            )
+                top = 24.dp, start = 20.dp, end = 20.dp
+            ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+        Image(
+            modifier = Modifier
+                .width(100.dp)
+                .height(100.dp),
+            painter = rememberAsyncImagePainter(
+                model = "https:${weatherDetails.weathers.first().weatherStateImageURL}",
+                placeholder = painterResource(R.drawable.weather_image_example)
+            ),
+            contentDescription = "",
+            contentScale = ContentScale.Fit,
+        )
+        Row(
+            modifier = Modifier.padding(
+                horizontal = 32.dp
+            ), verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = weatherDetails.weather.name,
-                style = MaterialTheme.typography.h4
+                "${weatherDetails.weathers.first().temperature}°C",
+                style = MaterialTheme.typography.body1.copy(
+                    fontSize = 40.sp, fontWeight = FontWeight.ExtraBold
+                )
             )
-            Image(
-                modifier = Modifier
-                    .width(100.dp)
-                    .height(100.dp),
-                painter = rememberAsyncImagePainter(
-                    model = "https:${ weatherDetails.currentWeather.weatherStateAbbr }",
-                    placeholder = painterResource(R.drawable.weather_image_example)
-                ),
-                contentDescription = "",
-                contentScale = ContentScale.Fit,
-            )
+            Spacer(Modifier.width(16.dp))
             Text(
-                weatherDetails.currentWeather.weatherState,
-                style = MaterialTheme.typography.h6
+                weatherDetails.weathers.first().weatherState,
+                style = MaterialTheme.typography.body2,
+                textAlign = TextAlign.End
             )
         }
     }
 }
 
+
+
 @Preview
 @Composable
-fun NextWeatherView(
+fun NextWeatherForecastView(
     @PreviewParameter(WeatherDetailsParameterProvider::class) weatherDetails: WeatherDetails
 ) {
+    val nextWeathers = weatherDetails.weathers.getNextDaysWeathers()
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
     ) {
         Box(
             modifier = Modifier.padding(
-                start = 20.dp,
-                top = 32.dp
+                start = 20.dp, top = 36.dp
             )
         ) {
             Text(
-                text = "Next weather forecasts",
+                text = "Next ${nextWeathers.size} days",
                 style = MaterialTheme.typography.h6
             )
         }
         LazyColumn(
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 32.dp),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            items(weatherDetails.nextWeathers) { nextWeather ->
-                Card(
+            items(nextWeathers) { nextWeather ->
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(
-                            top = 20.dp,
-                            start = 20.dp,
-                            end = 20.dp
-                        )
+                            horizontal = 20.dp
+                        ), horizontalArrangement = Arrangement.Start
                 ) {
+                    Text(
+                        modifier = Modifier.weight(2F),
+                        text = nextWeather.date.weekDayStringFromDateString(),
+                        style = MaterialTheme.typography.body1
+                    )
                     Row(
-                        modifier = Modifier.padding(8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        modifier = Modifier.weight(3F), horizontalArrangement = Arrangement.Start
                     ) {
-                        Text(
-                            modifier = Modifier.weight(1F),
-                            text = nextWeather.weatherState,
-                            style = MaterialTheme.typography.body1
-                        )
                         Box(
-                            modifier = Modifier.weight(1F),
-                            contentAlignment = Alignment.Center
+                            modifier = Modifier.padding(
+                                end = 8.dp
+                            ), contentAlignment = Alignment.Center
                         ) {
                             Image(
-                                modifier = Modifier
-                                    .height(50.dp)
-                                    .width(50.dp),
                                 painter = rememberAsyncImagePainter(
-                                    model = "https:${ weatherDetails.currentWeather.weatherStateAbbr }",
+                                    model = "https:${nextWeather.weatherStateImageURL}",
                                     placeholder = painterResource(R.drawable.weather_image_example)
                                 ),
                                 contentDescription = "",
                                 contentScale = ContentScale.Fit,
                             )
                         }
+                        Text(
+                            text = nextWeather.weatherState,
+                            style = MaterialTheme.typography.body1,
+                            textAlign = TextAlign.Center
+                        )
                     }
+                    Text(
+                        modifier = Modifier.weight(1F),
+                        textAlign = TextAlign.End,
+                        text = "${nextWeather.temperature}°C",
+                        style = MaterialTheme.typography.body1
+                    )
                 }
             }
         }

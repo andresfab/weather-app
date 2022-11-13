@@ -1,6 +1,6 @@
 package com.apfol.weatherapp.network.dto
 
-import com.apfol.weatherapp.domain.model.CurrentWeather
+import com.apfol.weatherapp.domain.model.Weather
 import com.google.gson.annotations.SerializedName
 
 data class Forecastday(
@@ -11,11 +11,12 @@ data class Forecastday(
     @SerializedName("hour") var hour: ArrayList<Hour> = arrayListOf()
 )
 
-fun Forecastday.toCurrentWeather(): CurrentWeather {
-    return CurrentWeather(
+fun Forecastday.toWeather(): Weather {
+    return Weather(
         day.condition.text,
         day.condition.icon,
         day.avghumidity,
-        day.avgtempC
+        day.avgtempC,
+        date
     )
 }
