@@ -16,7 +16,7 @@ interface WeatherAPI {
 
     @GET("forecast.json")
     suspend fun getWeatherDetails(
-        @Query("q") woeid: String,
+        @Query("q") name: String,
         @Query("days") days: Int = WEATHER_DAYS,
         @Query("key") key: String = API_KEY
     ): WeatherDetailsDTO
