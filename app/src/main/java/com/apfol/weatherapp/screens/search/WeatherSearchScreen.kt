@@ -1,5 +1,6 @@
 package com.apfol.weatherapp.screens.search
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apfol.weatherapp.domain.model.WeatherSearchResult
+import com.apfol.weatherapp.navigation.WeatherScreens
 
 @Composable
 fun WeatherSearchScreen(
@@ -34,7 +36,7 @@ fun WeatherSearchScreen(
         Header(viewModel.searchQuery.value) { newQuery ->
             viewModel.search(newQuery)
         }
-        ResultsView(viewModel.state.value)
+        ResultsView(viewModel.state.value, navController)
     }
 }
 
@@ -69,9 +71,10 @@ fun Header(
 @Preview
 @Composable
 fun ResultsView(
-    state: WeatherSearchState = WeatherSearchState()
+    state: WeatherSearchState = WeatherSearchState(),
+    navController: NavController? = null
 ) {
-    ResultsList(state)
+    ResultsList(state, navController)
     if (state.results.isEmpty()) {
         Text(
             text = "Find the weather somewhere",
@@ -108,7 +111,8 @@ private fun ResultsList(
             WeatherSearchResult("Chía", "Cundinamarca"),
             WeatherSearchResult("Soacha", "Cundinamarca")
         )
-    )
+    ),
+    navController: NavController? = null
 ) {
     LazyColumn(
         modifier = Modifier.padding(
@@ -120,7 +124,8 @@ private fun ResultsList(
         items(state.results) { result ->
             WeatherResultItem(
                 result.name,
-                result.country
+                result.country,
+                navController
             )
         }
     }
@@ -130,11 +135,15 @@ private fun ResultsList(
 @Composable
 fun WeatherResultItem(
     name: String = "Chía",
-    country: String = "Cundinamarca"
+    country: String = "Cundinamarca",
+    navController: NavController? = null
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                navController?.navigate(WeatherScreens.WeatherDetailsScreen.name + "/$name")
+            }
     ) {
         Column(
             modifier = Modifier
