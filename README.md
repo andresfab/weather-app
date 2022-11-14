@@ -1,5 +1,5 @@
 # Weather app
-## Libs and Architectures implemented
+## Libs and architecture implemented
 
 - Jetpack Compose
 - Clean Architecture
