@@ -10,7 +10,7 @@ import com.apfol.weatherapp.di.AppModule
 import com.apfol.weatherapp.domain.model.WeatherSearchResult
 import com.apfol.weatherapp.navigation.WeatherScreens
 import com.apfol.weatherapp.ui.theme.WeatherAppTheme
-import com.apfol.weatherapp.utils.TestTags
+import com.apfol.weatherapp.utils.SearchScreenTestTags
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -52,10 +52,13 @@ class WeatherSearchScreenTest {
 
         // Then
         composeRule
-            .onNodeWithTag(TestTags.SEARCH_HEADER)
+            .onNodeWithTag(SearchScreenTestTags.SEARCH_HEADER)
             .assertExists()
         composeRule
-            .onNodeWithTag(TestTags.EMPTY_RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.EMPTY_RESULTS_CONTAINER)
+            .assertExists()
+        composeRule
+            .onNodeWithTag(SearchScreenTestTags.TOP_BAR)
             .assertExists()
     }
 
@@ -70,16 +73,16 @@ class WeatherSearchScreenTest {
 
         // Then
         composeRule
-            .onNodeWithTag(TestTags.EMPTY_RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.EMPTY_RESULTS_CONTAINER)
             .assertExists()
         composeRule
-            .onNodeWithTag(TestTags.LOADING_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.LOADING_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.RESULTS_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.ERROR_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.ERROR_CONTAINER)
             .assertDoesNotExist()
     }
 
@@ -98,16 +101,16 @@ class WeatherSearchScreenTest {
 
         // Then
         composeRule
-            .onNodeWithTag(TestTags.LOADING_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.LOADING_CONTAINER)
             .assertExists()
         composeRule
-            .onNodeWithTag(TestTags.EMPTY_RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.EMPTY_RESULTS_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.RESULTS_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.ERROR_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.ERROR_CONTAINER)
             .assertDoesNotExist()
     }
 
@@ -132,16 +135,16 @@ class WeatherSearchScreenTest {
 
         // Then
         composeRule
-            .onNodeWithTag(TestTags.RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.RESULTS_CONTAINER)
             .assertExists()
         composeRule
-            .onNodeWithTag(TestTags.EMPTY_RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.EMPTY_RESULTS_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.LOADING_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.LOADING_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.ERROR_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.ERROR_CONTAINER)
             .assertDoesNotExist()
     }
 
@@ -161,16 +164,16 @@ class WeatherSearchScreenTest {
 
         // Then
         composeRule
-            .onNodeWithTag(TestTags.ERROR_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.ERROR_CONTAINER)
             .assertExists()
         composeRule
-            .onNodeWithTag(TestTags.RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.RESULTS_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.EMPTY_RESULTS_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.EMPTY_RESULTS_CONTAINER)
             .assertDoesNotExist()
         composeRule
-            .onNodeWithTag(TestTags.LOADING_CONTAINER)
+            .onNodeWithTag(SearchScreenTestTags.LOADING_CONTAINER)
             .assertDoesNotExist()
     }
 }

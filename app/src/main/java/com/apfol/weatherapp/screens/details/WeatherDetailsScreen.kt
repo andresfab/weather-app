@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +41,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.apfol.weatherapp.R
 import com.apfol.weatherapp.domain.model.WeatherDetails
+import com.apfol.weatherapp.utils.DetailsScreenTestTags
 import com.apfol.weatherapp.utils.WeatherDetailsParameterProvider
 import com.apfol.weatherapp.utils.getNextDaysWeathers
 import com.apfol.weatherapp.utils.getLineChartData
@@ -52,52 +55,68 @@ fun WeatherDetailsScreen(
     navController: NavController, viewModel: WeatherDetailsViewModel = hiltViewModel()
 ) {
     Scaffold(topBar = {
-        TopAppBar(title = {
-            Text("Weather details")
-        }, navigationIcon = {
-            IconButton(onClick = { navController.navigateUp() }) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack, contentDescription = "Back arrow"
-                )
-            }
-        })
-    }) { padding ->
-        val weatherDetailState = viewModel.weatherDetailState.value
-        if (weatherDetailState.isLoading) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-        weatherDetailState.weatherDetails?.let {
-            LazyColumn(
-                Modifier.padding(padding)
-            ) {
-                item { ActualWeatherView(it) }
-                item {
-                    HoursTemperatureChart(
-                        getLineChartData(
-                            it.weathers.first().hours.toSeriesDataPointList()
-                        )
+        TopAppBar(
+            modifier = Modifier.testTag(DetailsScreenTestTags.TOP_BAR),
+            title = { Text("Weather details") },
+            navigationIcon = {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(
+                        imageVector = Icons.Filled.ArrowBack, contentDescription = "Back arrow"
                     )
                 }
-                item { NextWeatherForecastView(it) }
             }
+        )
+    }) { padding ->
+        val weatherDetailState = viewModel.weatherDetailState.value
+        Box(
+            modifier = Modifier.padding(padding)
+        ) {
+            ContentContainer(weatherDetailState)
         }
-        if (weatherDetailState.error.isNotBlank()) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                text = weatherDetailState.error,
-                color = MaterialTheme.colors.error,
-                textAlign = TextAlign.Center
-            )
+    }
+}
+
+@Composable
+fun ContentContainer(
+    weatherDetailState: WeatherDetailsState = WeatherDetailsState()
+) {
+    if (weatherDetailState.isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight()
+                .testTag(DetailsScreenTestTags.LOADING_CONTAINER),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
+    }
+    weatherDetailState.weatherDetails?.let {
+        LazyColumn(
+            Modifier
+                .testTag(DetailsScreenTestTags.DETAILS_CONTAINER)
+        ) {
+            item { ActualWeatherView(it) }
+            item {
+                HoursTemperatureChart(
+                    getLineChartData(
+                        it.weathers.first().hours.toSeriesDataPointList()
+                    )
+                )
+            }
+            item { NextWeatherForecastView(it) }
+        }
+    }
+    if (weatherDetailState.error.isNotBlank()) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .testTag(DetailsScreenTestTags.ERROR_CONTAINER),
+            text = weatherDetailState.error,
+            color = MaterialTheme.colors.error,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
