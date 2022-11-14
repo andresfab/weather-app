@@ -1,4 +1,4 @@
-# WeatherApp
+# Weather app
 ## Libs and Architectures implemented
 
 - Jetpack Compose
