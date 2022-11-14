@@ -190,7 +190,6 @@ fun NextWeatherForecastView(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
     ) {
         Box(
             modifier = Modifier.padding(

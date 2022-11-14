@@ -28,8 +28,8 @@ class WeatherDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun getWeather(weatherId: String) {
-        getWeatherDetailsUseCase(weatherId).onEach { result ->
+    private fun getWeather(weatherName: String) {
+        getWeatherDetailsUseCase(weatherName).onEach { result ->
             when(result) {
                 is Resource.Success -> {
                     _weatherDetailState.value = WeatherDetailsState(
