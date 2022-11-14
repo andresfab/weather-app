@@ -24,6 +24,7 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apfol.weatherapp.domain.model.WeatherSearchResult
 import com.apfol.weatherapp.navigation.WeatherScreens
+import com.apfol.weatherapp.utils.TestTags
 
 @Composable
 fun WeatherSearchScreen(
@@ -63,7 +65,8 @@ fun Header(
                 start = 20.dp,
                 top = 32.dp,
                 end = 20.dp
-            ),
+            )
+            .testTag(TestTags.SEARCH_HEADER),
         contentAlignment = Alignment.Center
     ) {
         TextField(
@@ -81,42 +84,64 @@ fun ResultsView(
     state: WeatherSearchState = WeatherSearchState(),
     navController: NavController? = null
 ) {
-    ResultsList(state, navController)
-    if (state.results.isEmpty()) {
+    if (state.error.isNotBlank()) {
+        ErrorContainer(state)
+    } else if (state.isLoading) {
+        LoadingContainer()
+    } else if (state.results.isEmpty()) {
+        EmptyResultsContainer()
+    } else {
+        ResultsContainer(state, navController)
+    }
+}
+
+@Composable
+private fun EmptyResultsContainer() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .testTag(TestTags.EMPTY_RESULTS_CONTAINER),
+        contentAlignment = Alignment.Center
+    ) {
         Text(
             text = "Find the weather somewhere",
             textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+            modifier = Modifier.fillMaxWidth()
         )
     }
-    if (state.error.isNotBlank()) {
-        Text(
-            text = state.error,
-            color = MaterialTheme.colors.error,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
+}
+
+@Composable
+private fun ErrorContainer(state: WeatherSearchState) {
+    Text(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .testTag(TestTags.ERROR_CONTAINER),
+        text = state.error,
+        color = MaterialTheme.colors.error,
+        textAlign = TextAlign.Center,
+    )
+}
+
+@Composable
+private fun LoadingContainer() {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight()
+            .testTag(TestTags.LOADING_CONTAINER)
+    ) {
+        CircularProgressIndicator(
+            modifier = Modifier.align(Alignment.Center)
         )
-    }
-    if (state.isLoading) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-        ) {
-            CircularProgressIndicator(
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
     }
 }
 
 @Preview
 @Composable
-private fun ResultsList(
+private fun ResultsContainer(
     state: WeatherSearchState = WeatherSearchState(
         results = listOf(
             WeatherSearchResult("Chía", "Cundinamarca"),
@@ -128,7 +153,7 @@ private fun ResultsList(
     LazyColumn(
         modifier = Modifier.padding(
             top = 32.dp
-        ),
+        ).testTag(TestTags.RESULTS_CONTAINER),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(state.results) { result ->
