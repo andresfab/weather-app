@@ -33,7 +33,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.apfol.weatherapp.domain.model.WeatherSearchResult
 import com.apfol.weatherapp.navigation.WeatherScreens
-import com.apfol.weatherapp.utils.TestTags
+import com.apfol.weatherapp.utils.SearchScreenTestTags
 
 @Composable
 fun WeatherSearchScreen(
@@ -41,7 +41,10 @@ fun WeatherSearchScreen(
     viewModel: WeatherSearchViewModel = hiltViewModel()
 ) {
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Weather search") }) }
+        topBar = { TopAppBar(
+            modifier = Modifier.testTag(SearchScreenTestTags.TOP_BAR),
+            title = { Text("Weather search") }
+        ) }
     ) {
         Column(Modifier.padding(it)) {
             Header(viewModel.searchQuery.value) { newQuery ->
@@ -66,7 +69,7 @@ fun Header(
                 top = 32.dp,
                 end = 20.dp
             )
-            .testTag(TestTags.SEARCH_HEADER),
+            .testTag(SearchScreenTestTags.SEARCH_HEADER),
         contentAlignment = Alignment.Center
     ) {
         TextField(
@@ -101,7 +104,7 @@ private fun EmptyResultsContainer() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .testTag(TestTags.EMPTY_RESULTS_CONTAINER),
+            .testTag(SearchScreenTestTags.EMPTY_RESULTS_CONTAINER),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -118,7 +121,7 @@ private fun ErrorContainer(state: WeatherSearchState) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .testTag(TestTags.ERROR_CONTAINER),
+            .testTag(SearchScreenTestTags.ERROR_CONTAINER),
         text = state.error,
         color = MaterialTheme.colors.error,
         textAlign = TextAlign.Center,
@@ -131,7 +134,7 @@ private fun LoadingContainer() {
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
-            .testTag(TestTags.LOADING_CONTAINER)
+            .testTag(SearchScreenTestTags.LOADING_CONTAINER)
     ) {
         CircularProgressIndicator(
             modifier = Modifier.align(Alignment.Center)
@@ -153,7 +156,7 @@ private fun ResultsContainer(
     LazyColumn(
         modifier = Modifier.padding(
             top = 32.dp
-        ).testTag(TestTags.RESULTS_CONTAINER),
+        ).testTag(SearchScreenTestTags.RESULTS_CONTAINER),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(state.results) { result ->
