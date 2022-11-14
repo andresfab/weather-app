@@ -25,6 +25,9 @@ class WeatherDetailsViewModelTest {
     private lateinit var savedStateHandleMock: SavedStateHandle
     private lateinit var getWeatherDetailsUseCaseMock: GetWeatherDetailsUseCase
 
+    /**
+     * Rule necessary to initialize Main dispatcher.
+     */
     @get:Rule
     val dispatcherRule = TestDispatcherRule()
 
