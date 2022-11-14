@@ -1,6 +1,5 @@
 package com.apfol.weatherapp.screens.details
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,10 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -43,11 +39,10 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.apfol.weatherapp.R
 import com.apfol.weatherapp.domain.model.WeatherDetails
-import com.apfol.weatherapp.screens.details.composables.ChartContainer
 import com.apfol.weatherapp.utils.WeatherDetailsParameterProvider
 import com.apfol.weatherapp.utils.getNextDaysWeathers
-import com.apfol.weatherapp.utils.LINE_CHART_DATA
-import com.apfol.weatherapp.utils.toLineChartData
+import com.apfol.weatherapp.utils.getLineChartData
+import com.apfol.weatherapp.utils.toSeriesDataPointList
 import com.apfol.weatherapp.utils.weekDayStringFromDateString
 import hu.ma.charts.line.LineChart
 import hu.ma.charts.line.data.LineChartData
@@ -85,7 +80,9 @@ fun WeatherDetailsScreen(
                 item { ActualWeatherView(it) }
                 item {
                     HoursTemperatureChart(
-                        it.weathers.first().hours.toLineChartData()
+                        getLineChartData(
+                            it.weathers.first().hours.toSeriesDataPointList()
+                        )
                     )
                 }
                 item { NextWeatherForecastView(it) }
@@ -153,7 +150,7 @@ fun ActualWeatherView(
 @Preview
 @Composable
 fun HoursTemperatureChart(
-    data: LineChartData = LINE_CHART_DATA
+    data: LineChartData = getLineChartData()
 ) {
     Column(
         modifier = Modifier

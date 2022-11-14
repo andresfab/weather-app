@@ -8,18 +8,22 @@ import com.apfol.weatherapp.ui.theme.Blue200
 import hu.ma.charts.line.data.AxisLabel
 import hu.ma.charts.line.data.LineChartData
 
-val LINE_CHART_DATA = LineChartData(
+private val pointsList = listOf(
+    LineChartData.SeriesData.Point(0, 0f),
+    LineChartData.SeriesData.Point(1, 10.0f),
+    LineChartData.SeriesData.Point(2, 20.0f),
+    LineChartData.SeriesData.Point(3, 30.0f),
+    LineChartData.SeriesData.Point(4, 50.0f),
+    LineChartData.SeriesData.Point(5, 35.0f),
+)
+
+fun getLineChartData(
+    seriesDataPoints: List<LineChartData.SeriesData.Point> = pointsList
+) = LineChartData(
     series = listOf(
         LineChartData.SeriesData(
             title = "Line A",
-            points = listOf(
-                LineChartData.SeriesData.Point(0, 0f),
-                LineChartData.SeriesData.Point(1, 10.0f),
-                LineChartData.SeriesData.Point(2, 20.0f),
-                LineChartData.SeriesData.Point(3, 30.0f),
-                LineChartData.SeriesData.Point(4, 50.0f),
-                LineChartData.SeriesData.Point(5, 35.0f),
-            ),
+            points = seriesDataPoints,
             Blue200,
             gradientFill = true
         ),
