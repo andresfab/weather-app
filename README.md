@@ -11,7 +11,7 @@
 - Coil
 - Dagger Hilt
 
-## Notas
+## Notes
 
 - The search engine was optimized to avoid making multiple requests in a short time
 - The application retains its state if the phone is changed orientation
