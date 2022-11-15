@@ -55,7 +55,7 @@ fun WeatherSearchScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun Header(
     query: String = "",
@@ -81,7 +81,7 @@ fun Header(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ResultsView(
     state: WeatherSearchState = WeatherSearchState(),
@@ -142,7 +142,7 @@ private fun LoadingContainer() {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun ResultsContainer(
     state: WeatherSearchState = WeatherSearchState(
@@ -169,7 +169,7 @@ private fun ResultsContainer(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun WeatherResultItem(
     name: String = "Chía",
