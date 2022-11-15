@@ -120,7 +120,7 @@ fun ContentContainer(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun ActualWeatherView(
     @PreviewParameter(WeatherDetailsParameterProvider::class) weatherDetails: WeatherDetails
@@ -132,6 +132,18 @@ fun ActualWeatherView(
                 start = 20.dp, end = 20.dp
             ), horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Text(
+            modifier = Modifier.padding(
+                top = 16.dp,
+                start = 16.dp,
+                end = 16.dp
+            ),
+            text = weatherDetails.location.name,
+            style = MaterialTheme.typography.body1.copy(
+                fontSize = 28.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+        )
         Image(
             modifier = Modifier
                 .width(100.dp)
@@ -166,7 +178,7 @@ fun ActualWeatherView(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun HoursTemperatureChart(
     data: LineChartData = getLineChartData()
@@ -200,7 +212,7 @@ fun HoursTemperatureChart(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun NextWeatherForecastView(
     @PreviewParameter(WeatherDetailsParameterProvider::class) weatherDetails: WeatherDetails
